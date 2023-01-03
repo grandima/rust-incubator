@@ -50,12 +50,33 @@ Resource Acquisition Is Initialization. Whenever an object goes out of scope, it
 - What is an iterator? What is a collection? How do they differ? How are they used?
 Iterator - design pattern + trait in Rust. Need to implement next() in order to emit optional elements. If you have no elements to emit - you must emit `None` all the time, so design your iterator wisely. Collection - a data structure that contains elements: hashmap, array, linkedlist, tree etc. Collection is a contaier, Iterator provides access to the next element. Iterators are lazy - if you don't `collect` all your operations that you applied to it, it will not provide any values then. Almost any collection implements Iterator - it's a way to provide an element for example in a loop. Collection is a way to store elements (usually efficienlty, with some purpuse). You may implement Iterator for any type, not just for collections.
 
-**- What are macros? Which problems do they solve? What is the difference between declarative and procedural macro?
+- What are macros? Which problems do they solve? What is the difference between declarative and procedural macro?
+Macros - is rust's ability to write code that writes code (metaprogramming). Macroses modify (usually by adding) the actual code that needs to be compiled. E.g. adding implementation of traits to the type by utilizing #derive macro.
+Declarative - works like "match". It takes tokens and matches with its known patterns. If if finds one - it will generate an appropriate code.
+Procedural - a code that will execute before compilation. It will take input tokens (a simplest element of compilation) as an argument, modify them (by generating more tokens usually), and return modified tokens. These modified tokens may be some type that implements a trait.
 **- How code is tested in [Rust]? Where should you put tests and why?
-**- What is special about slice? What is layout of Rust standard data types? Difference between fat and thin pointers?
-**- Why [Rust] has `&str` and `String` types? How do they differ? When should you use them? Why str slice coexist with slice? 
+Unit tests. The purpose of unit tests - is to test (and cover) the most of your `units` in your module. 
+Mark a module as testable, not buildable by adding `#[cfg(test)]` attribute. This will exclude tests from the final binary binary.
+A test module may get access to a super module's private fields by utilizing `use super::*`. As a result - all methods and fields from the parent module and its submodules become accessible.
+Integration tests. The purpose of integration tests - is to test if your module gets integrated correctly into the whole system.
+Create a separate `tests` directory and only test public methods (obviously, because integration tests don't exist in a testable module and you don't have an access to private methods).
+By adding an attribute `test` to a method - you mark it as a test method. It will not be included in a final binary of a product. 
+- What is special about slice? What is layout of Rust standard data types? Difference between fat and thin pointers?
+Slices let you reference a contiguous sequence of elements in a collection, it doesn't take ownership. It contains a pointer to an interested starting byte of a collection and a length. 
+The layout of a type is its size, alignment, and the relative offsets of its fields. The alignment of a value specifies what addresses are valid to store the value at. The size of a value is the offset in bytes between successive elements in an array with that item type including alignment padding. The size of a value is always a multiple of its alignment.  
+The term "fat pointer" is used to refer to references and raw pointers to dynamically sized types (DSTs) – slices or trait objects. A fat pointer contains a pointer plus some information that makes the DST "complete" (e.g. the length). So a slice is a fat pointer.
+A thin pointer is a pointer that is essentially a single usize that points to a value of a known type.
+
+- Why [Rust] has `&str` and `String` types? How do they differ? When should you use them? Why str slice coexist with slice?
+The str type, also called a ‘string slice’, is the most primitive string type. It is usually seen in its borrowed form, &str. A &str is made up of two components: a pointer to some bytes, and a length, as a result - it's a fat pointer. String slices have a fixed size, and cannot be mutated. 
+
+String is a growable, mutable string type. It is implemented as a vector of bytes.
+String implements Deref<Target = str>, and so inherits all of str’s methods. In addition, this means that you can pass a String to a function which takes a &str by using an ampersand (&)
+
+Use String if you need owned string data (like passing strings to other threads, or building them at runtime), and use &str if you only need a view of a string.
+
 - Is [Rust] OOP language? Is it possible to use SOLID/GRASP? Does it have an inheritance? Is Rust functional language?
-Yes. Yes/yes. A trait can inherit another trait. But it will mean that the real type will need to comply to all traits i.e. implement all traits' methods.
+Yes. Yes/yes. A trait can inherit another trait. But it will mean that the real type will need to   comply to all traits i.e. implement all traits' methods.
 
 After you're done notify your lead in an appropriate PR (pull request), and he will exam what you have learned.
 
