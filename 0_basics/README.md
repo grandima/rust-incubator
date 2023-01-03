@@ -46,15 +46,14 @@ Benefit from doc - The compiler statically guarantees (via its borrow checker) t
 From multithreaded point of view - having one owner guarantees that the memory cannot be modified by different threads at the same time.
 - What is RAII? How is it implemented in [Rust]? What is the benefit of using it?
 Resource Acquisition Is Initialization. Whenever an object goes out of scope, its destructor is called and its owned resources are freed. It is implemented using move semantics. It prevents from memory leaks where a developer forgents to clean a captured memory explicitly. 
-- What are lifetimes? Which problems do they solve? Which benefits do they give?
+**- What are lifetimes? Which problems do they solve? Which benefits do they give?
 - What is an iterator? What is a collection? How do they differ? How are they used?
 Iterator - design pattern + trait in Rust. Need to implement next() in order to emit optional elements. If you have no elements to emit - you must emit `None` all the time, so design your iterator wisely. Collection - a data structure that contains elements: hashmap, array, linkedlist, tree etc. Collection is a contaier, Iterator provides access to the next element. Iterators are lazy - if you don't `collect` all your operations that you applied to it, it will not provide any values then. Almost any collection implements Iterator - it's a way to provide an element for example in a loop. Collection is a way to store elements (usually efficienlty, with some purpuse). You may implement Iterator for any type, not just for collections.
-
 - What are macros? Which problems do they solve? What is the difference between declarative and procedural macro?
 Macros - is rust's ability to write code that writes code (metaprogramming). Macroses modify (usually by adding) the actual code that needs to be compiled. E.g. adding implementation of traits to the type by utilizing #derive macro.
 Declarative - works like "match". It takes tokens and matches with its known patterns. If if finds one - it will generate an appropriate code.
 Procedural - a code that will execute before compilation. It will take input tokens (a simplest element of compilation) as an argument, modify them (by generating more tokens usually), and return modified tokens. These modified tokens may be some type that implements a trait.
-**- How code is tested in [Rust]? Where should you put tests and why?
+- How code is tested in [Rust]? Where should you put tests and why?
 Unit tests. The purpose of unit tests - is to test (and cover) the most of your `units` in your module. 
 Mark a module as testable, not buildable by adding `#[cfg(test)]` attribute. This will exclude tests from the final binary binary.
 A test module may get access to a super module's private fields by utilizing `use super::*`. As a result - all methods and fields from the parent module and its submodules become accessible.
