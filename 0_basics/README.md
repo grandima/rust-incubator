@@ -46,7 +46,12 @@ Benefit from doc - The compiler statically guarantees (via its borrow checker) t
 From multithreaded point of view - having one owner guarantees that the memory cannot be modified by different threads at the same time.
 - What is RAII? How is it implemented in [Rust]? What is the benefit of using it?
 Resource Acquisition Is Initialization. Whenever an object goes out of scope, its destructor is called and its owned resources are freed. It is implemented using move semantics. It prevents from memory leaks where a developer forgents to clean a captured memory explicitly. 
-**- What are lifetimes? Which problems do they solve? Which benefits do they give?
+
+- What are lifetimes? Which problems do they solve? Which benefits do they give? 
+ A variable's lifetime is how long the data it points to can be statically verified by the compiler to be valid at its current memory address.
+ By telling a compiler that the value at a given variable will exist not less than some "lifetime", we guarantee a safety that at the time of execution, the value will actually exist and the application will not crash at runtime with "null pointer exception".
+ Benefit - a compile-time (not runtime) guarantee that the all variables will point to existing an valid memory.
+
 - What is an iterator? What is a collection? How do they differ? How are they used?
 Iterator - design pattern + trait in Rust. Need to implement next() in order to emit optional elements. If you have no elements to emit - you must emit `None` all the time, so design your iterator wisely. Collection - a data structure that contains elements: hashmap, array, linkedlist, tree etc. Collection is a contaier, Iterator provides access to the next element. Iterators are lazy - if you don't `collect` all your operations that you applied to it, it will not provide any values then. Almost any collection implements Iterator - it's a way to provide an element for example in a loop. Collection is a way to store elements (usually efficienlty, with some purpuse). You may implement Iterator for any type, not just for collections.
 - What are macros? Which problems do they solve? What is the difference between declarative and procedural macro?
@@ -65,15 +70,11 @@ Slices let you reference a contiguous sequence of elements in a collection, it d
 The layout of a type is its size, alignment, and the relative offsets of its fields. The alignment of a value specifies what addresses are valid to store the value at. The size of a value is the offset in bytes between successive elements in an array with that item type including alignment padding. The size of a value is always a multiple of its alignment.  
 The term "fat pointer" is used to refer to references and raw pointers to dynamically sized types (DSTs) – slices or trait objects. A fat pointer contains a pointer plus some information that makes the DST "complete" (e.g. the length). So a slice is a fat pointer.
 A thin pointer is a pointer that is essentially a single usize that points to a value of a known type.
-
 - Why [Rust] has `&str` and `String` types? How do they differ? When should you use them? Why str slice coexist with slice?
 The str type, also called a ‘string slice’, is the most primitive string type. It is usually seen in its borrowed form, &str. A &str is made up of two components: a pointer to some bytes, and a length, as a result - it's a fat pointer. String slices have a fixed size, and cannot be mutated. 
-
 String is a growable, mutable string type. It is implemented as a vector of bytes.
 String implements Deref<Target = str>, and so inherits all of str’s methods. In addition, this means that you can pass a String to a function which takes a &str by using an ampersand (&)
-
 Use String if you need owned string data (like passing strings to other threads, or building them at runtime), and use &str if you only need a view of a string.
-
 - Is [Rust] OOP language? Is it possible to use SOLID/GRASP? Does it have an inheritance? Is Rust functional language?
 Yes. Yes/yes. A trait can inherit another trait. But it will mean that the real type will need to   comply to all traits i.e. implement all traits' methods.
 
