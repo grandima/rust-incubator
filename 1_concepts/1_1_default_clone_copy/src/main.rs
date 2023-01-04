@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, hash::Hash};
 
 #[derive(Copy, Clone, Default, PartialEq, Eq, Hash)]
 struct Point {
@@ -19,6 +19,11 @@ impl Polyline {
         self.my_set.insert(point)
     }
 }
+impl AsRef<HashSet<Point>> for Polyline {
+    fn as_ref(&self) -> &HashSet<Point> {
+        &self.my_set
+    }
+}
 #[test]
 fn test_same() {
     let a = Point::default();
@@ -34,5 +39,8 @@ fn test_different() {
     assert!(line.add(b))
 }
 fn main() {
+    let a = Point::default();
+    let line = Polyline::new(a);
+    let b = line.as_ref();
     println!("Implement weeme!");
 }
