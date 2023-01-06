@@ -1,10 +1,16 @@
 mod mut_me_t {
-
-    use crate::mut_me_mod;
-    use std::pin::Pin;
-    impl<T> mut_me_mod::MutMeSomehow for T {
-        fn mut_me_somehow(v: Pin<&mut Self>) {
-            let x = v.get_mut();
+    use std::{fmt::Debug, pin::Pin};
+    pub trait MutMeSomehow {
+        fn mut_me_somehow(self: Pin<&mut Self>);
+    }
+    pub trait SayHi: Debug {
+        fn say_hi(self: Pin<&Self>) {
+            println!("Hi from {:?}", self)
+        }
+    }
+    impl<T: Clone + Unpin> MutMeSomehow for T {
+        fn mut_me_somehow(self: Pin<&mut Self>) {
+            let x = self.get_mut();
             x.clone_from(&x.clone());
         }
     }

@@ -7,7 +7,7 @@ fn say_hi(self: Pin<&Self>) {
     println!("Hi from {:?}", self)
 }
 }
-use std::{ops::DerefMut, pin::Pin};
+use std::{ops::DerefMut};
 impl<T: Default> MutMeSomehow for Vec<T>
 where
     Vec<T>: DerefMut,
