@@ -7,7 +7,6 @@ pub trait SayHi: fmt::Debug {
         println!("Hi from {:?}", self)
     }
 }
-use std::{fmt, pin::Pin};
 impl<T: Default> MutMeSomehow for Box<T> {
     fn mut_me_somehow(mut self: Pin<&mut Self>) {
         self.set(Box::new(T::default()));

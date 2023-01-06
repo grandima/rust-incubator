@@ -8,8 +8,8 @@ fn say_hi(self: Pin<&Self>) {
 }
 }
 impl MutMeSomehow for &[u8] {
-    fn mut_me_somehow(self: Pin<&mut Self>) {
-        todo!("don't know how to implement here");
+    fn mut_me_somehow(mut self: Pin<&mut Self>) {
+        self.set(&[2 as u8, 3, 4]);
     }
 }
 impl SayHi for &[u8] {}
