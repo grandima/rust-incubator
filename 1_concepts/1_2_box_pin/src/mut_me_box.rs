@@ -13,3 +13,15 @@ impl<T: Default> MutMeSomehow for Box<T> {
     }
 }
 impl<T: fmt::Debug> SayHi for Box<T> {}
+
+mod tests {
+    use std::pin::Pin;
+    use super::*;
+    #[test]
+    fn test_mut() {
+        let mut s = Box::new(5);
+        let pin = Pin::new(&mut s);
+        pin.mut_me_somehow();
+        assert_eq!(s, Box::new(i32::default()));
+    }
+}

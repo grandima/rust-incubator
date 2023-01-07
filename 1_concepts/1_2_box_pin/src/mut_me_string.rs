@@ -13,3 +13,16 @@ impl MutMeSomehow for String {
     }
 }
 impl SayHi for String {}
+
+#[cfg(test)]
+mod tests {
+    use std::pin::Pin;
+    use super::*;
+    #[test]
+    fn test_mut() {
+        let mut s = String::from("AAA");
+        let pin = Pin::new(&mut s);
+        pin.mut_me_somehow();
+        assert_eq!(s.chars().last(), Some('1'));
+    }
+}

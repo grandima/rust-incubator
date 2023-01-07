@@ -18,3 +18,16 @@ where
     }
 }
 impl<T: std::fmt::Debug> SayHi for Vec<T> {}
+
+#[cfg(test)]
+mod tests {
+    use std::pin::Pin;
+    use super::*;
+    #[test]
+    fn test_mut() {
+        let mut s: Vec<i32> = vec![1, 2, 3, 4];
+        let pin = Pin::new(&mut s);
+        pin.mut_me_somehow();
+        assert_eq!(s.last(), Some(&i32::default()));
+    }
+}

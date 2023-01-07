@@ -1,4 +1,4 @@
-use std::{fmt, pin::Pin};
+use std::{fmt, pin::Pin, ops::{Deref, DerefMut}};
 pub trait MutMeSomehow {
 fn mut_me_somehow(self: Pin<&mut Self>);
 }
@@ -9,7 +9,17 @@ fn say_hi(self: Pin<&Self>) {
 }
 impl MutMeSomehow for &[u8] {
     fn mut_me_somehow(mut self: Pin<&mut Self>) {
-        self.set(&[2 as u8, 3, 4]);
+        self.set(&[4, 3, 2, 1]);
+        todo!("i don't know how to mutate a slice");
     }
 }
 impl SayHi for &[u8] {}
+#[cfg(test)]
+mod tests {
+    use std::pin::Pin;
+    use super::*;
+    #[test]
+    fn test_mut() {
+        //TODO: test mutating a slice
+    }
+}
