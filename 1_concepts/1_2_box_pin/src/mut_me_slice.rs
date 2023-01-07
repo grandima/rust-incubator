@@ -10,7 +10,6 @@ fn say_hi(self: Pin<&Self>) {
 impl MutMeSomehow for &[u8] {
     fn mut_me_somehow(mut self: Pin<&mut Self>) {
         self.set(&[4, 3, 2, 1]);
-        todo!("i don't know how to mutate a slice");
     }
 }
 impl SayHi for &[u8] {}
@@ -20,6 +19,10 @@ mod tests {
     use super::*;
     #[test]
     fn test_mut() {
-        //TODO: test mutating a slice
+        let x = [1 as u8, 2, 3, 4];
+        let mut slice = &x[0..];
+        let pin = Pin::new(&mut slice);
+        pin.mut_me_somehow();
+        assert_eq!(slice, &[4, 3, 2, 1]);
     }
 }
