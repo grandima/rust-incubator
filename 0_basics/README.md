@@ -15,8 +15,8 @@ Rust does not yet have a defined memory model.
 You can spawn threads in rust - it may be considered as multi-threaded. Rust contains synchronization mechanisms (e.g. Arc) for accessing memory from different threads.
 Rust supports async models (e.g. async/await), but they are usually used among with community crates.
 - What runtime [Rust] has? Does it use a GC (garbage collector)?
-No runtime. As a result - no GC. I can consider that ownership and borrowing rules define rust's memory model.
-
+Rust has some runtimes panic_handler, global_allocator, windows_subsystem attributes. For example: panic_handler gets invoked when the method panics. Usually the stack gets unwinded, but the developer can write their's own hook on panic.
+Rust doesn't have GC, it doesn't need it because it knows memory's lifetime already at compile-time.
 - What statically typing means? What is a benefit of using it? Weak typing vs strong typing? Implicit / explicit?
 Rust is statically and strongly typed PL. 
 The types are defined at compile time. It introduces a compile-time safety for passing types and calling methods. The application will not crash at run-time becase of `NullPointerException` (in Java) or some method was not found.
