@@ -1,4 +1,4 @@
-use std::{ops::Deref};
+use std::ops::Deref;
 use rand::Rng;
 pub struct Random<T> {
     a: T, b: T, c: T
@@ -33,10 +33,9 @@ impl <T>AsRef<T> for Random<T> {
 impl<T: Clone> TryFrom<Vec<T>> for Random<T> {
     type Error = &'static str;
     fn try_from(vec: Vec<T>) -> Result<Self, Self::Error> {
-        match vec.len() == 3 {
-            true => Ok(Self{a: vec[0].clone(), b: vec[1].clone(), c: vec[2].clone()}),
-            false => Err("bad length")
-        }
+        let data: [T; 3] = vec.try_into().map_err(|_| "bad length")?;
+        let [a, b, c] = data;
+        Ok(Self {a, b, c })
     }
 }
 

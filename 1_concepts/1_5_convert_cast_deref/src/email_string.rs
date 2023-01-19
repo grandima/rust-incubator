@@ -25,6 +25,11 @@ impl TryFrom<String> for EmailString {
         }
     }
 }
+impl AsRef<str> for EmailString {
+    fn as_ref(&self) -> &str {
+        &self.0
+    }
+}
 
 #[cfg(test)]
 mod tests {
