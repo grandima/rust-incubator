@@ -16,25 +16,13 @@ impl TryFrom<&str> for EmailString {
     }
 }
 
-impl From<String> for EmailString {
-    fn from(str: String) -> Self {
+impl TryFrom<String> for EmailString {
+    type Error = &'static str;
+    fn try_from(str: String) -> Result<Self, Self::Error> {
         match EmailAddress::is_valid(&str) {
-            true => EmailString(str),
-            false => EmailString("".to_string()),
+            true => Ok(EmailString(str.to_string())),
+            false => Err("invalid string"),
         }
-    }
-}
-
-impl AsRef<str> for EmailString {
-    fn as_ref(&self) -> &str {
-        &self.0
-    }
-}
-
-impl Deref for EmailString {
-    type Target = String;
-    fn deref(&self) -> &Self::Target {
-        &self.0
     }
 }
 
@@ -42,13 +30,26 @@ impl Deref for EmailString {
 mod tests {
     use super::*;
     #[test]
-    fn test_try_from_err() {
+    fn test_try_from_str_err() {
         let b = EmailString::try_from("AAA");
         assert_eq!(b.err().unwrap(), "invalid email");
     }
     #[test]
-    fn test_try_from_true() {
+    fn test_try_from_str_true() {
         let b = EmailString::try_from("tim@apple.com");
+        let l = b.ok().unwrap();
+        let r = EmailString("tim@apple.com".to_string());
+        assert!(l == r);
+    }
+
+    #[test]
+    fn test_try_from_string_err() {
+        let b = EmailString::try_from("AAA".to_string());
+        assert_eq!(b.err().unwrap(), "invalid string");
+    }
+    #[test]
+    fn test_try_from_string_true() {
+        let b = EmailString::try_from("tim@apple.com".to_string());
         let l = b.ok().unwrap();
         let r = EmailString("tim@apple.com".to_string());
         assert!(l == r);
