@@ -40,6 +40,12 @@ impl<T: Clone> TryFrom<Vec<T>> for Random<T> {
     }
 }
 
+impl<T: Clone> From<[T; 3]> for Random<T> {
+    fn from(vec: [T; 3]) -> Self {
+        Self{a: vec[0].clone(), b: vec[1].clone(), c: vec[2].clone()}
+    }
+}
+
 mod tests {
     use super::*;
     #[test]
@@ -52,6 +58,12 @@ mod tests {
         let l = Random::try_from(vec![1, 2, 3]);
         let r = Random{a: 1, b: 2, c: 3};
         assert!(l.ok().unwrap() == r);
+    }
+    #[test]
+    fn test_try_from_arr_true() {
+        let l = Random::from([1, 2, 3]);
+        let r = Random{a: 1, b: 2, c: 3};
+        assert!(l == r);
     }
 }
 
