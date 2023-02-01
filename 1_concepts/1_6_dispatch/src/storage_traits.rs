@@ -58,11 +58,11 @@ impl UserRepositoryDyn {
     }
 }
 
-pub struct UserRepositoryStatic {
-    storage: StorageImpl<u64, User>
+pub struct UserRepositoryStatic<S: Storage<u64, User>> {
+    storage: S,
 }
-impl UserRepositoryStatic {
-    pub fn new(storage: StorageImpl<u64, User>) -> Self {
+impl <S: Storage<u64, User>> UserRepositoryStatic<S> {
+    pub fn new(storage: S) -> Self {
         Self {storage: storage}
     }
     pub fn get(&self, key: &u64) -> Option<&User> {
