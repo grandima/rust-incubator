@@ -23,6 +23,13 @@ struct NotSyncNotSend {
 
 impl !Sync for NotSyncNotSend{}
 impl !Send for NotSyncNotSend{}
+/* In order to create a variable to demonstrate that it may 
+or may not be shared between threads, it needs to have 
+the lifetime that is equal or longer than each thread's it is used in.
+That's why it needs to be `static`. 
+But it cannot be declared as static, because it's !Sync.
+ */
+//static STATIC_ONLY_SEND: OnlySend = OnlySend{val: 1};
 static STATIC_ONLY_SYNC: OnlySync = OnlySync{val: AtomicU64::new(1)};
 static STATIC_S_S: SyncAndSend = SyncAndSend{val: AtomicU64::new(1)};
 fn main() {
@@ -33,7 +40,11 @@ fn main() {
     let s_s = SyncAndSend{val: AtomicU64::new(1)};
     let ref_static_s_s = &STATIC_S_S;
     let ns_ns = NotSyncNotSend{val: AtomicU64::new(1)};
-
+    
+    spawn(||{
+        _ = &STATIC_ONLY_SYNC;
+        _ = &STATIC_S_S;
+    }).join().unwrap();
     spawn( move || {
         //cannot borrow because Not Sync. compile error
         // ref_send;
@@ -54,4 +65,5 @@ fn main() {
             // ref_ns_ns;
         }
     }).join().unwrap();
+
 }
