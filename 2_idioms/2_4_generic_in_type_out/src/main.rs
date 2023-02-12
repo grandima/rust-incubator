@@ -1,10 +1,10 @@
-use std::net::{IpAddr, SocketAddr};
+use std::{net::{IpAddr, SocketAddr}, num::NonZeroU16};
 
 fn main() {
     println!("Refactor me!");
 
-    let mut err = Error::new("NO_USER".to_string());
-    err.status(404).message("User not found".to_string());
+    let mut err = Error::new("NO_USER");
+    err.status(NonZeroU16::new(404).unwrap()).message("User not found");
 }
 
 #[derive(Debug)]
@@ -26,19 +26,19 @@ impl Default for Error {
 }
 
 impl Error {
-    pub fn new(code: String) -> Self {
+    pub fn new(code: &str) -> Self {
         let mut err = Self::default();
-        err.code = code;
+        err.code = code.into();
         err
     }
 
-    pub fn status(&mut self, s: u16) -> &mut Self {
-        self.status = s;
+    pub fn status<S: Into<u16>>(&mut self, s: S) -> &mut Self {
+        self.status = s.into();
         self
     }
 
-    pub fn message(&mut self, m: String) -> &mut Self {
-        self.message = m;
+    pub fn message<S: Into<String>>(&mut self, m: S) -> &mut Self {
+        self.message = m.into();
         self
     }
 }
@@ -47,8 +47,8 @@ impl Error {
 pub struct Server(Option<SocketAddr>);
 
 impl Server {
-    pub fn bind(&mut self, ip: IpAddr, port: u16) {
-        self.0 = Some(SocketAddr::new(ip, port))
+    pub fn bind<U: Into<IpAddr>, V: Into<u16>>(&mut self, ip: U, port: V) {
+        self.0 = Some(SocketAddr::new(ip.into(), port.into()))
     }
 }
 
@@ -57,7 +57,7 @@ mod server_spec {
     use super::*;
 
     mod bind {
-        use std::net::Ipv4Addr;
+        use std::net::{Ipv4Addr, Ipv6Addr};
 
         use super::*;
 
@@ -65,10 +65,10 @@ mod server_spec {
         fn sets_provided_address_to_server() {
             let mut server = Server::default();
 
-            server.bind(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 8080);
+            server.bind([127, 0, 0, 1], 8080 as u16);
             assert_eq!(format!("{}", server.0.unwrap()), "127.0.0.1:8080");
 
-            server.bind("::1".parse().unwrap(), 9911);
+            server.bind("::1".parse::<Ipv6Addr>().unwrap(), 9911 as u16);
             assert_eq!(format!("{}", server.0.unwrap()), "[::1]:9911");
         }
     }
