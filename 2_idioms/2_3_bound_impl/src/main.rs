@@ -8,7 +8,7 @@ fn main() {
 }
 
 /// A projected state built from a series of events.
-pub trait Aggregate: Default {
+pub trait Aggregate: Sized {
     /// A static string representing the type of the aggregate.
     ///
     /// Note: This should effectively be a constant value, and should never change.
