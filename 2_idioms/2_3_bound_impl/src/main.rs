@@ -8,7 +8,7 @@ fn main() {
 }
 
 /// A projected state built from a series of events.
-pub trait Aggregate: Default {
+pub trait Aggregate: Sized {
     /// A static string representing the type of the aggregate.
     ///
     /// Note: This should effectively be a constant value, and should never change.
@@ -17,16 +17,14 @@ pub trait Aggregate: Default {
     /// Consumes the event, applying its effects to the aggregate.
     fn apply<E>(&mut self, event: E)
     where
-        E: AggregateEvent<Self>,
+        E: AggregateEvent,
     {
         event.apply_to(self);
     }
 }
 
 /// An identifier for an aggregate.
-pub trait AggregateId<A>
-where
-    A: Aggregate,
+pub trait AggregateId
 {
     /// Gets the stringified aggregate identifier.
     fn as_str(&self) -> &str;
@@ -39,9 +37,9 @@ pub trait Event {
 }
 
 /// An event that can be applied to an aggregate.
-pub trait AggregateEvent<A: Aggregate>: Event {
+pub trait AggregateEvent: Event {
     /// Consumes the event, applying its effects to the aggregate.
-    fn apply_to(self, aggregate: &mut A);
+    fn apply_to<A>(self, aggregate: &mut A) where A: Aggregate;
 }
 
 /// Represents an event sequence number, starting at 1
@@ -63,7 +61,7 @@ impl EventNumber {
 }
 
 /// An aggregate version.
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd)]
 pub enum Version {
     /// The version of an aggregate that has not had any events applied to it.
     Initial,
@@ -104,8 +102,6 @@ impl Version {
 /// An aggregate that has been loaded from a source, which keeps track of the version of its last snapshot and the current version of the aggregate.
 #[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub struct HydratedAggregate<A>
-where
-    A: Aggregate,
 {
     version: Version,
     snapshot_version: Option<Version>,
@@ -113,8 +109,6 @@ where
 }
 
 impl<A> HydratedAggregate<A>
-where
-    A: Aggregate,
 {
     /// The current version of the aggregate.
     pub fn version(&self) -> Version {
@@ -137,22 +131,22 @@ where
     }
 
     /// Applies a sequence of events to the internal aggregate.
-    pub fn apply_events<E: AggregateEvent<A>, I: IntoIterator<Item = E>>(&mut self, events: I) {
+    pub fn apply_events<E: AggregateEvent, I: IntoIterator<Item = E>>(&mut self, events: I) where
+    A: Aggregate, {
         for event in events {
             self.apply(event);
         }
     }
 
     /// Applies a single event to the aggregate, keeping track of the new aggregate version.
-    pub fn apply<E: AggregateEvent<A>>(&mut self, event: E) {
+    pub fn apply<E: AggregateEvent>(&mut self, event: E) where
+    A: Aggregate, {
         self.state.apply(event);
         self.version.incr();
     }
 }
 
 impl<A> AsRef<A> for HydratedAggregate<A>
-where
-    A: Aggregate,
 {
     fn as_ref(&self) -> &A {
         &self.state
@@ -160,8 +154,6 @@ where
 }
 
 impl<A> Borrow<A> for HydratedAggregate<A>
-where
-    A: Aggregate,
 {
     fn borrow(&self) -> &A {
         &self.state
@@ -169,20 +161,13 @@ where
 }
 
 /// An identified, specific instance of a hydrated aggregate.
-#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub struct Entity<I, A>
-where
-    A: Aggregate,
-    I: AggregateId<A>,
 {
     id: I,
     aggregate: HydratedAggregate<A>,
 }
 
 impl<I, A> Entity<I, A>
-where
-    A: Aggregate,
-    I: AggregateId<A>,
 {
     /// Creates a new entity from an identifier and an associated hydrated aggregate.
     pub fn new(id: I, aggregate: HydratedAggregate<A>) -> Self {
@@ -206,9 +191,6 @@ where
 }
 
 impl<I, A> From<Entity<I, A>> for HydratedAggregate<A>
-where
-    A: Aggregate,
-    I: AggregateId<A>,
 {
     fn from(entity: Entity<I, A>) -> Self {
         entity.aggregate
@@ -216,9 +198,6 @@ where
 }
 
 impl<I, A> AsRef<HydratedAggregate<A>> for Entity<I, A>
-where
-    A: Aggregate,
-    I: AggregateId<A>,
 {
     fn as_ref(&self) -> &HydratedAggregate<A> {
         &self.aggregate
@@ -226,9 +205,6 @@ where
 }
 
 impl<I, A> AsMut<HydratedAggregate<A>> for Entity<I, A>
-where
-    A: Aggregate,
-    I: AggregateId<A>,
 {
     fn as_mut(&mut self) -> &mut HydratedAggregate<A> {
         &mut self.aggregate
@@ -236,9 +212,6 @@ where
 }
 
 impl<I, A> Borrow<HydratedAggregate<A>> for Entity<I, A>
-where
-    A: Aggregate,
-    I: AggregateId<A>,
 {
     fn borrow(&self) -> &HydratedAggregate<A> {
         &self.aggregate
@@ -246,9 +219,6 @@ where
 }
 
 impl<I, A> Borrow<A> for Entity<I, A>
-where
-    A: Aggregate,
-    I: AggregateId<A>,
 {
     fn borrow(&self) -> &A {
         self.aggregate.borrow()
@@ -256,9 +226,6 @@ where
 }
 
 impl<I, A> BorrowMut<HydratedAggregate<A>> for Entity<I, A>
-where
-    A: Aggregate,
-    I: AggregateId<A>,
 {
     fn borrow_mut(&mut self) -> &mut HydratedAggregate<A> {
         &mut self.aggregate
