@@ -1,32 +1,32 @@
-use std::{net::{IpAddr, SocketAddr}, num::NonZeroU16};
+use std::{net::{IpAddr, SocketAddr}, num::NonZeroU16, borrow::Cow};
 
 fn main() {
     println!("Refactor me!");
 
-    let mut err = Error::new("NO_USER");
+    let mut err = Error::new("NO_USER".into());
     err.status(NonZeroU16::new(404).unwrap()).message("User not found");
 }
 
 #[derive(Debug)]
-pub struct Error {
-    code: String,
+pub struct Error<'a> {
+    code: Cow<'a, str>,
     status: u16,
     message: String,
 }
 
-impl Default for Error {
+impl <'a>Default for Error<'a> {
     #[inline]
     fn default() -> Self {
         Self {
-            code: "UNKNOWN".to_string(),
+            code: "UNKNOWN".into(),
             status: 500,
             message: "Unknown error has happened.".to_string(),
         }
     }
 }
 
-impl Error {
-    pub fn new(code: &str) -> Self {
+impl <'a>Error<'a> {
+    pub fn new(code: Cow<'a, str>) -> Self {
         let mut err = Self::default();
         err.code = code.into();
         err
