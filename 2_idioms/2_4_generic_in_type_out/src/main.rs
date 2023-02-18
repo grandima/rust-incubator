@@ -8,24 +8,24 @@ fn main() {
 }
 
 #[derive(Debug)]
-pub struct Error<'a> {
+pub struct Error<'a, 'b> {
     code: Cow<'a, str>,
     status: u16,
-    message: String,
+    message: Cow<'b, str>,
 }
 
-impl <'a>Default for Error<'a> {
+impl <'a, 'b>Default for Error<'a, 'b> {
     #[inline]
     fn default() -> Self {
         Self {
             code: "UNKNOWN".into(),
             status: 500,
-            message: "Unknown error has happened.".to_string(),
+            message: "Unknown error has happened.".into(),
         }
     }
 }
 
-impl <'a>Error<'a> {
+impl <'a, 'b>Error<'a, 'b> {
     pub fn new(code: Cow<'a, str>) -> Self {
         let mut err = Self::default();
         err.code = code.into();
@@ -37,7 +37,7 @@ impl <'a>Error<'a> {
         self
     }
 
-    pub fn message<S: Into<String>>(&mut self, m: S) -> &mut Self {
+    pub fn message<S: Into<Cow<'b, str>>>(&mut self, m: S) -> &mut Self {
         self.message = m.into();
         self
     }
