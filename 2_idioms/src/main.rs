@@ -3,9 +3,9 @@ use crate::store::VendingMachine;
 
 mod store {
     use std::borrow::Cow;
-    use std::collections::btree_map::Entry;
-    use std::collections::BTreeMap;
-
+    use std::collections::btree_map::{Entry, OccupiedEntry};
+    use std::collections::{BTreeMap, HashMap};
+    use std::collections::hash_map::Entry as HMEntry;
     use crate::store::coin::Coin;
 
     pub mod coin {
@@ -56,7 +56,7 @@ mod store {
 
     #[derive(Clone, Debug)]
     pub struct VendingMachine<'a, State> {
-        products: BTreeMap<Cow<'a, str>, PriceAndAmount>,
+        products: HashMap<Cow<'a, str>, PriceAndAmount>,
         capacity: usize,
         coins: BTreeMap<Coin, usize>,
         state: State,
@@ -65,7 +65,7 @@ mod store {
     impl<'a> VendingMachine<'a, Ready> {
         pub fn new(capacity: usize) -> Self {
             VendingMachine {
-                products: BTreeMap::new(),
+                products: HashMap::new(),
                 capacity: capacity,
                 coins: BTreeMap::new(),
                 state: Ready,
@@ -139,15 +139,13 @@ mod store {
         ) -> Result<VendingMachine<'a, Paying<'a>>, VendingMachineError> {
             let product_name = product.into();
             let product = self.products.entry(product_name);
-
             let product = match product {
-                Entry::Occupied(x) => Product {
+                HMEntry::Occupied(x) => Product {
                     price: x.get().price,
                     name: x.key().clone(),
                 },
-                Entry::Vacant(_) => return Err(VendingMachineError::NoProduct),
+                HMEntry::Vacant(_) => return Err(VendingMachineError::NoProduct),
             };
-
             Ok(VendingMachine {
                 products: self.products,
                 capacity: self.capacity,
