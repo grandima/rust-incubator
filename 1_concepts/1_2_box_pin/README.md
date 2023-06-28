@@ -1,8 +1,6 @@
 Step 1.2: Boxing and pinning
 ============================
 
-__Estimated time__: 1 day
-
 
 
 
@@ -40,32 +38,67 @@ For better understanding [`Pin`] purpose, design, limitations and use cases read
 - [Tamme Schichler: Pinning in plain English][5]
 - [Yoshua Wuyts: Safe Pin Projections Through View Types][6]
 - [Official `#[pin_project]` docs][7]
+- [Alice Ryhl answers on "Pin tutorial are confusing me"][9]
 
 
 
 
 ## Task
 
-Given the following traits:
-```rust
-trait MutMeSomehow {
-    fn mut_me_somehow(self: Pin<&mut Self>);
-}
-```
-```rust
-trait SayHi: fmt::Debug {
-    fn say_hi(self: Pin<&Self>) {
-        println!("Hi from {:?}", self)
-    }
-}
-```
+__Estimated time__: 1 day
 
-Implement them for the following types: `Box<T>`, `Rc<T>`, `Vec<T>`, `String`, `&[u8]`, `T`. 
-`mut_me_somehow` must mutate self somehow. You can add trait bounds to the types.
-Write simple tests to demonstrate `mut_me_somehow`.
+
+
+
+1. For the following types: `Box<T>`, `Rc<T>`, `Vec<T>`, `String`, `&[u8]`, `T`.  
+   Implement the following traits:
+   ```rust
+   trait SayHi: fmt::Debug {
+       fn say_hi(self: Pin<&Self>) {
+           println!("Hi from {:?}", self)
+       }
+   }
+   ```
+   ```rust
+   trait MutMeSomehow {
+       fn mut_me_somehow(self: Pin<&mut Self>) {
+           // Implementation must be meaningful, and
+           // obviously call something requiring `&mut self`.
+           // The point here is to practice dealing with
+           // `Pin<&mut Self>` -> `&mut self` conversion
+           // in different contexts, without introducing 
+           // any `Unpin` trait bounds.
+       }
+   }
+   ```
+
+2. For the following structure:
+   ```rust
+   struct MeasurableFuture<Fut> {
+       inner_future: Fut,
+       started_at: Option<std::time::Instant>,
+   }
+   ```
+   Provide a [`Future`] trait implementation, transparently polling the `inner_future`, and printing its execution time in nanoseconds once it's ready. Using `Fut: Unpin` trait bound (or similar) is not allowed. 
+
+
+
+
+## Questions
+
+After completing everything above, you should be able to answer (and understand why) the following questions:
+- What does "boxing" mean in [Rust]? How is it useful? When and why is it required?
+- What is [`Pin`] and why is it required? What guarantees does it provide? How it fulfills them?
+- How does [`Unpin`] affect the [`Pin`]? What does it mean?
+- Is it allowed to move pinned data after the [`Pin`] dies? Why?
+- What is structural pinning? When it should be used and why?
+- What is [`Pin`] projection? Why does it exist? How is it used?
+
+
 
 
 [`Box`]: https://doc.rust-lang.org/std/boxed/struct.Box.html
+[`Future`]: https://doc.rust-lang.org/std/future/trait.Future.html
 [`Pin`]: https://doc.rust-lang.org/std/pin/struct.Pin.html
 [`std::boxed`]: https://doc.rust-lang.org/std/boxed/index.html
 [`std::pin`]: https://doc.rust-lang.org/std/pin/index.html
@@ -82,3 +115,4 @@ Write simple tests to demonstrate `mut_me_somehow`.
 [6]: https://blog.yoshuawuyts.com/safe-pin-projections-through-view-types
 [7]: https://docs.rs/pin-project/latest/pin_project/attr.pin_project.html
 [8]: https://mahdi.blog/rust-box-str-vs-string
+[9]: https://users.rust-lang.org/t/pin-tutorial-are-confusing-me/91003/18

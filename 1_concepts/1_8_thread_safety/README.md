@@ -1,8 +1,6 @@
 Step 1.8: Thread safety
 =======================
 
-__Estimated time__: 1 day
-
 [Rust] has [`Send`] and [`Sync`] marker traits which are fundamental for concurrency and thread safety story in [Rust] and represent one of [fearless concurrency][2] corner stones (which allow to [avoid data races][1] at compile time).
 
 For better understanding [`Send`]/[`Sync`] purpose, design, limitations and use cases, read through the following articles:
@@ -21,6 +19,11 @@ For better understanding [`Send`]/[`Sync`] purpose, design, limitations and use 
 
 ## Task
 
+__Estimated time__: 1 day
+
+
+
+
 Implement the following types, which meet conditions:
 1. `OnlySync` is `Sync`, but `!Send`.
 2. `OnlySend` is `Send`, but `!Sync`.
@@ -34,9 +37,18 @@ Play with these types from multiple threads to see how compile time [fearless co
 
 
 
-[Rust]: https://www.rust-lang.org
+## Questions
+
+After completing everything above, you should be able to answer (and understand why) the following questions:
+- What does "fearless concurrency" mean in [Rust]? With which mechanisms does [Rust] fulfill this guarantee exactly?
+- Why do [`Send`] and [`Sync`] exist at all? How is it related to interior mutability?
+
+
+
+
 [`Send`]: https://doc.rust-lang.org/std/marker/trait.Send.html
 [`Sync`]: https://doc.rust-lang.org/std/marker/trait.Sync.html
+[Rust]: https://www.rust-lang.org
 
 [1]: https://doc.rust-lang.org/nomicon/races.html
 [2]: https://doc.rust-lang.org/book/ch16-00-concurrency.html
@@ -46,4 +58,4 @@ Play with these types from multiple threads to see how compile time [fearless co
 [6]: https://nyanpasu64.github.io/blog/an-unsafe-tour-of-rust-s-send-and-sync
 [7]: https://blog.reverberate.org/2021/12/18/thread-safety-cpp-rust.html
 [8]: https://cliffle.com/blog/not-thread-safe
-[9]: https://itsallaboutthebit.com/arc-mutex
+[9]: https://web.archive.org/web/20220929143451/https://itsallaboutthebit.com/arc-mutex

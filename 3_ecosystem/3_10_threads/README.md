@@ -1,8 +1,6 @@
 Step 3.10: Multithreading and parallelism
 =========================================
 
-__Estimated time__: 1 day
-
 One of main [Rust]'s design goals is a [concurrency][1]. [Rust] has a [strong opinion][2] about that, while allows different concurrent models to coexist.
 
 
@@ -68,6 +66,7 @@ For better understanding and familiarity with parallelism in [Rust], read throug
 - [Official `rayon` crate docs][`rayon`]
 - [`rayon` crate FAQ][22]
 - [`rayon` crate demos][23]
+- [Kofi Otuo: Implementing data parallelism with Rayon Rust][34]
 - [Dawid Ciężarkiewicz: Adding parallelism to your Rust iterators with `dpc-pariter`][30]
 - [Official `dpc-pariter` crate docs][`dpc-pariter`]
 - [Rust Edition Guide: 3.9. SIMD for faster computing][25]
@@ -100,11 +99,26 @@ Multiprocessing is a system that has more than one or two processors. In Multipr
 
 ## Task
 
+__Estimated time__: 1 day
+
+
+
+
 Write a program with the following workflow:
 - `Producer` is a separate thread, which continuously generates square matrixes of random `u8` elements and size `4096`.
 - `Consumer` is a separate thread, which takes a generated matrix, counts sum of all its elements and prints the sum to STDOUT.
 - There are only 1 `Producer` and 2 `Consumer`s.
-- Counting sum of matrix elements should be parallelized. 
+- Counting sum of matrix elements should be parallelized.
+
+
+
+
+## Questions
+
+After completing everything above, you should be able to answer (and understand why) the following questions:
+- What is concurrency? What is parallelism? How do they relate to each other and how do they differ?
+- How parallelism is represented in [Rust]? Which are common crates for using it?
+- What are the main ways of threads synchronization in [Rust]? Which advantages and disadvantages does each one have? What are the use-cases for each one?
 
 
 
@@ -151,5 +165,6 @@ Write a program with the following workflow:
 [29]: https://nickymeuleman.netlify.app/blog/multithreading-rust
 [30]: https://dpc.pw/adding-parallelism-to-your-rust-iterators
 [31]: https://blog.m-ou.se/rust-cpp-concurrency
-[32]: https://neosmart.net/blog/2022/implementing-truly-safe-semaphores-in-rust
+[32]: https://neosmart.net/blog/implementing-truly-safe-semaphores-in-rust/
 [33]: https://vgatherps.github.io/2022-11-28-dec
+[34]: https://blog.logrocket.com/implementing-data-parallelism-rayon-rust

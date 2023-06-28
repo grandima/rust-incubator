@@ -1,9 +1,6 @@
 Step 3.4: Regular expressions and custom parsers
 ================================================
 
-__Estimated time__: 1 day
-
-
 
 
 ## Regular expressions
@@ -62,31 +59,62 @@ For better understanding parsing problem and approaches, along with some example
 - [Laurence Tratt: Which Parsing Approach?][9]
 - [Richard L. Apodaca: A Beginner's Guide to Parsing in Rust][10]
 - [Eshan Singh: Practical Parsing in Rust with nom][14]
+- [Nazmul Idris: Guide to parsing with nom][18]
 - [Brian Kung: Building a CEDICT parser in Rust with Nom][11]
+- [The Nom Guide (Nominomicon)][19]
+- [Aleksey Kladov: Resilient LL Parsing Tutorial][15]
+- [Aleksey Kladov: Simple but Powerful Pratt Parsing][16]
+- [Aleksey Kladov: From Pratt to Dijkstra][17]
 
 
 
 
 ## Task
 
+__Estimated time__: 1 day
+
+
+
+
 Given the following [Rust `fmt` syntax grammar][7]:
-```
-format_spec := [[fill]align][sign]['#']['0'][width]['.' precision][type]
-fill := character
-align := '<' | '^' | '>'
-sign := '+' | '-'
-width := count
-precision := count | '*'
-type := identifier | '?' | ''
-count := parameter | integer
-parameter := argument '$'
-```
+> ```
+> format_string := text [ maybe_format text ] *
+> maybe_format := '{' '{' | '}' '}' | format
+> format := '{' [ argument ] [ ':' format_spec ] [ ws ] * '}'
+> argument := integer | identifier
+>
+> format_spec := [[fill]align][sign]['#']['0'][width]['.' precision]type
+> fill := character
+> align := '<' | '^' | '>'
+> sign := '+' | '-'
+> width := count
+> precision := count | '*'
+> type := '' | '?' | 'x?' | 'X?' | identifier
+> count := parameter | integer
+> parameter := argument '$'
+> ```
+> In the above grammar,
+> - `text` must not contain any `'{'` or `'}'` characters,
+> - `ws` is any character for which [`char::is_whitespace`](https://doc.rust-lang.org/std/primitive.char.html#method.is_whitespace) returns `true`, has no semantic meaning and is completely optional,
+> - `integer` is a decimal integer that may contain leading zeroes and must fit into an `usize` and
+> - `identifier` is an `IDENTIFIER_OR_KEYWORD` (not an `IDENTIFIER`) as defined by the [Rust language reference](https://doc.rust-lang.org/reference/identifiers.html).
 
 Implement a parser to parse `sign`, `width` and `precision` from a given input (assumed to be a `format_spec`).
 
 Provide implementations in two flavours: [`regex`]-based and via building a custom parser.
 
 Prove your implementation correctness with tests.
+
+
+
+
+## Questions
+
+After completing everything above, you should be able to answer (and understand why) the following questions:
+- How does [`regex`] crate achieve linear time complexity? In what price?
+- How to avoid regular expression recompilation in [Rust]? Why is it important?
+- Which are the common kinds of libraries for writing custom parses in [Rust]? Which benefits does each one have?
+- What advantages does libraries give for writing a custom parser? Are they mandatory? When does it make sense to avoid using a library for implementing a parser?
 
 
 
@@ -127,3 +155,8 @@ Prove your implementation correctness with tests.
 [12]: https://en.wikipedia.org/wiki/Parser_generator
 [13]: https://en.wikipedia.org/wiki/Monad_(functional_programming)
 [14]: https://naiveai.hashnode.dev/practical-parsing-nom
+[15]: https://matklad.github.io/2023/05/21/resilient-ll-parsing-tutorial.html
+[16]: https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html
+[17]: https://matklad.github.io/2020/04/15/from-pratt-to-dijkstra.html
+[18]: https://developerlife.com/2023/02/20/guide-to-nom-parsing
+[19]: https://tfpk.github.io/nominomicon/introduction.html

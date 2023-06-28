@@ -1,8 +1,6 @@
 Step 2.4: Abstract type in, concrete type out
 =============================================
 
-__Estimated time__: 1 day
-
 
 
 
@@ -89,7 +87,21 @@ However, this is not a strict rule, so should not be applied blindly. If you _re
 
 ## Task
 
+__Estimated time__: 1 day
+
+
+
+
 Refactor the code contained in [this step's crate](src/main.rs) to make it more efficient, idiomatic, simple and pleasant to use.
+
+
+
+
+## Questions
+
+After completing everything above, you should be able to answer (and understand why) the following questions:
+- Why abstracting over input type is good? Which problems does it have and how can they be overcome?
+- When returning a concrete type is good? When not? What are the trade-offs?
 
 
 

@@ -1,8 +1,6 @@
 Step 2.3: Bound behavior, not data
 ==================================
 
-__Estimated time__: 1 day
-
 Often, when we want to abstract over some type or behavior in [Rust] we are going from this:
 ```rust
 struct UserService {
@@ -103,7 +101,23 @@ let copy = loader.clone(); // it compiles now!
 
 ## Task
 
+__Estimated time__: 1 day
+
+
+
+
 Refactor the code contained in [this step's crate](src/main.rs) to reduce trait bounds pollution as much as possible.
+
+
+
+
+## Questions
+
+After completing everything above, you should be able to answer (and understand why) the following questions:
+- Which problems do trait bounds impose in [Rust] when are placed on a type definition?
+- Why placing trait bounds on `impl` blocks is better?
+- When cannot we do that and should use trait bounds on a type definition? When is it preferred?
+- What are the problems with `std` derive macros regarding type parameters? How could they be solved?
 
 
 

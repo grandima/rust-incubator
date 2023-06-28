@@ -1,8 +1,6 @@
 Step 2.1: Rich types ensure correctness
 =======================================
 
-__Estimated time__: 1 day
-
 [Rust] has a rich type system which allows to express our program primitives, entities, notions, logic and semantics mostly in types, rather than in data/values, which is known as a "programming with types" concept. The benefits of this are obvious: the more compiler knows about our problem - the more false programs it will decline. Or, rephrased: __the more we describe about the program in types - the more we reduce the probability for the program to be incorrect__.
 
 "Programming with types" inevitably implies its own idioms and patterns. The most common are described below.
@@ -75,12 +73,14 @@ error[E0308]: mismatched types
 
 This is what is called ["newtype pattern"][1]. [Newtypes][1] are a zero-cost abstraction - __there is no runtime overhead__. Additionally, you may __enforce desired invariants on values of the type__ (for example, `Email` type may allow only valid email address strings to be its values, and another good example is [`uom`] crate). Also, [newtype pattern][1] __makes code more understandable for developers__, as domain knowledge is reflected in types, so is described and documented more explicitly.
 
-The downside of using [newtype pattern][1] is a necessity of writing _more boilerplate code_, because you should provide common traits implementations by yourself (like `Clone`, `Copy`, `From`/`Into`/`AsRef`/`AsMut`), as without them the type won't be ergonomic in use. However, most of them can be _derived automatically_ with `std` capabilities or third-party derive-crates (like [`derive_more`]), so the cost is acceptable in most cases.
+The downside of using [newtype pattern][1] is a necessity of writing _more boilerplate code_, because you should provide common traits implementations by yourself (like `Clone`, `Copy`, `From`/`Into`/`AsRef`/`AsMut`), as without them the type won't be ergonomic in use. However, most of them can be _derived automatically_ with `std` capabilities or third-party derive-crates (like [`derive_more`]), so the cost is acceptable in most cases. Furthermore, the excellent [`nutype`] crate pushes this idea even further, aiming to provide the best ergonomics for [newtype pattern][1] without compromising any guarantees it gives.
 
 For better understanding [newtype pattern][1], read through the following articles:
 - [Rust Design Patterns: Newtype][1]
 - [Rust By Example: 14.7. New Type Idiom][2]
 - [Alexis King: Parse, don’t validate][7] ([ru][7_ru])
+- [Stefan Baumgartner: Refactoring in Rust: Abstraction with the Newtype Pattern][10]
+- [Official `nutype` crate docs][`nutype`]
 
 
 
@@ -99,11 +99,18 @@ For better understanding [typestates][3], read through the following articles:
 - [Ana Hobden: Pretty State Machine Patterns in Rust][4]
 - [Will Crichton: Type-level Programming in Rust][6]
 - [Sergey Potapov: Builder with typestate in Rust][8]
+- [State Pattern - Design Patterns][9]
+- [Azriel Hoh: Compile Time Correctness: Type State][11]
 
 
 
 
 ## Task
+
+__Estimated time__: 1 day
+
+
+
 
 For the `Post` type described above, assume the following behavior in our application:
 ```
@@ -122,7 +129,18 @@ Write simple tests for the task.
 
 
 
+## Questions
+
+After completing everything above, you should be able to answer (and understand why) the following questions:
+- Why expressing semantics in types is good? What are the benefits and downsides?
+- What is newtype pattern? How does it work? Which guarantees does it give?
+- What is typestates pattern? How does it work? Which guarantees does it give?
+
+
+
+
 [`derive_more`]: https://docs.rs/derive_more
+[`nutype`]: https://docs.rs/nutype
 [`state_machine_future`]: https://docs.rs/state_machine_future
 [`uom`]: https://docs.rs/uom
 [Rust]: https://www.rust-lang.org
@@ -136,3 +154,6 @@ Write simple tests for the task.
 [7]: https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate
 [7_ru]: https://habr.com/ru/post/498042
 [8]: https://www.greyblake.com/blog/builder-with-typestate-in-rust
+[9]: https://www.youtube.com/watch?v=N12L5D78MAA
+[11]: https://peace.mk/blog/compile-time-correctness-type-state
+[10]: https://fettblog.eu/refactoring-rust-abstraction-newtype

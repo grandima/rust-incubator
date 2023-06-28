@@ -1,8 +1,6 @@
 Step 3.9: Command-line arguments, environment variables and configs
 ===================================================================
 
-__Estimated time__: 1 day
-
 
 
 
@@ -18,6 +16,7 @@ For better understanding and familiarity with [CLI] tools in [Rust] ecosystem, r
 - [Rust Book: 12.1. Accepting Command Line Arguments][1]
 - [Official `std::env::Arg` docs][`std::env::Arg`]
 - [Official `clap` crate docs][`clap`]
+- [Pavlo Myroniuk: Rust Clap recipes][9]
 
 
 
@@ -66,6 +65,11 @@ For better understanding and familiarity with [`config`] crate design, concepts,
 
 ## Task
 
+__Estimated time__: 1 day
+
+
+
+
 Write a simple program which prints out its actual configuration. Configuration should be implemented as a typed hierarchical structure, which is able to parse from a specified file and/or environment variables. 
 
 The following priority should be applied (in ascending order) when merging:
@@ -94,6 +98,16 @@ OPTIONS:
 
 
 
+## Questions
+
+After completing everything above, you should be able to answer (and understand why) the following questions:
+- What are the benefits of having strongly-type configuration?
+- Why environment variables are useful for configuring an application? What is the main use-case for them?
+- How is [`config`] crate really useful? Why should we it and cannot just deserialize a file into structs via [`serde`]?
+
+
+
+
 [`clap`]: https://docs.rs/clap
 [`config`]: https://docs.rs/config
 [`dotenv`]: https://docs.rs/dotenv
@@ -112,5 +126,6 @@ OPTIONS:
 [4]: https://serde.rs/attributes.html#field-attributes
 [5]: https://github.com/mehcode/config-rs/tree/master/examples
 [6]: https://docs.rs/clap/latest/clap#example
-[7]: https://docs.rs/clap/latest/clap/builder/struct.Arg.html#method.env
+[7]: https://docs.rs/clap/latest/clap/parser/enum.ValueSource.html#variant.EnvVariable
 [8]: https://github.com/bkeepers/dotenv#usage
+[9]: https://tbt.qkation.com/posts/clap-recipes

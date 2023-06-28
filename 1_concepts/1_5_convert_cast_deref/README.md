@@ -1,8 +1,6 @@
 Step 1.5: Conversions, casting and dereferencing
 ================================================
 
-__Estimated time__: 1 day
-
 As [Rust] is a [strongly typed][1] language, all type conversions must be performed explicitly in the code. As [Rust] has a rich type system (programming logic and semantics are mostly expressed in types rather than in values), type conversions are inevitable in almost every single line of code. Fortunately, [Rust] offers [well-designed type conversion capabilities][`std::convert`], which are quite ergonomic, intuitive and are pleasant to use.
 
 
@@ -72,6 +70,9 @@ So, as a conclusion:
 
 For example, it's natural for an `UserEmail` type to implement `Borrow<str>`, so it may be easily consumed in the code accepting `&str` (converted to `&str`), as they're semantically equivalent regarding `Hash`, `Eq` and `Ord`. And it's good for some execution `Context` to implement `AsRef<dyn Repository>`, so it can be extracted and used where needed, without using the whole `Context`.
 
+For better understanding [`AsRef`]/[`Borrow`] differences, read through:
+- [Anup Jadhav: AsRef vs Borrow trait (ft. ChatGPT)][12]
+
 
 ### Inner-to-outer conversion
 
@@ -137,6 +138,7 @@ hello(&m);
 For better understanding [`Deref`] purpose, design, limitations and use cases read through:
 - [Rust Book: 15.2. Treating Smart Pointers Like Regular References with the Deref Trait][3]
 - [Official `Deref` docs][`Deref`]
+- [Deref vs AsRef vs Borrow vs Cow][12]
 
 
 ### Incorrect usage
@@ -175,6 +177,12 @@ See also:
 
 ## Task
 
+
+__Estimated time__: 1 day
+
+
+
+
 Implement the following types:
 1. `EmailString` - a type, which value can be only a valid email address string.
 2. `Random<T>` - a smart pointer, which takes 3 values of the pointed-to type on creation and points to one of them randomly every time is used.
@@ -182,6 +190,18 @@ Implement the following types:
 Provide conversion and `Deref` implementations for these types on your choice, to make their usage and interoperability with `std` types easy and ergonomic.
 
 Write simple tests for the task.
+
+
+
+## Questions
+
+After completing everything above, you should be able to answer (and understand why) the following questions:
+- How value-to-value conversion is represented in [Rust]? What is relation between fallible and infallible one?
+- How reference-to-reference conversion is represented in [Rust]? Hot its traits differ? When and which one should be used?
+- How can inner-to-outer reference conversion be achieved in [Rust]? Which prerequisites does it have?
+- What is dereferencing in [Rust]? How it can be abused? Why it shouldn't be abused?
+- Why using [`as`] keyword is not a good practice in [Rust]? Why do we still use it?
+
 
 
 
@@ -212,3 +232,4 @@ Write simple tests for the task.
 [9]: https://doc.rust-lang.org/rust-by-example/types/cast.html
 [10]: https://ricardomartins.cc/2016/08/03/convenient_and_idiomatic_conversions_in_rust
 [11]: https://rust-lang.github.io/rust-clippy/master/index.html#as_conversions
+[12]: https://rusty-ferris.pages.dev/blog/asref-vs-borrow-trait

@@ -1,8 +1,6 @@
 Step 3.8: Logging and tracing
 =============================
 
-__Estimated time__: 1 day
-
 [Rust] has flexible type system and [metaprogramming][1] capabilities, allowing to build both efficient and highly reusable log system. The idea is very similar to [`serde`] and is introduced in a widely used [`log`], [`slog`] and [`tracing`] crates.
 
 
@@ -19,6 +17,7 @@ One interesting part is that log levels can be [disabled at compile time][3], th
 
 For better understanding and familiarity with [`log`]'s design, concepts, usage, and features, read through the following articles:
 - [Official `log` crate docs][`log`]
+- [Jimmy Hartzell: Using the Log Crate in Your Rust Projects][12]
 
 
 
@@ -57,6 +56,11 @@ For better understanding and familiarity with [`tracing`]'s design, concepts, us
 
 ## Task
 
+__Estimated time__: 1 day
+
+
+
+
 Implement two loggers:
 1. Global main `app.log` logger which prints all its logs to `STDOUT`, but `WARN` level (and higher) logs to `STDERR`.
 2. Local `access.log` logger which writes all its logs to `access.log` file.
@@ -68,6 +72,18 @@ Examples:
 {"lvl":"ERROR","file":"app.log","time":"2018-07-30T12:14:14.196483657Z","msg":"Error occurred"}
 {"lvl":"INFO","file":"access.log","time":"2018-07-30T12:17:18.721127239Z","msg":"http","method":"POST","path":"/some"}
 ```
+
+
+
+
+## Questions
+
+After completing everything above, you should be able to answer (and understand why) the following questions:
+- How does [`log`] crate achieve its reusability over ecosystem? What are the ideas behind it?
+- Why logging is preferred over printing (`println!` usage)? When it's not?
+- What is structured logging? What benefits does it provide?
+- Why [`tracing`] crate is good for logging? What makes it preferred over [`slog`] and [`log`] crates?
+- What is tracing? Why is it beneficial for observability?
 
 
 
@@ -95,3 +111,4 @@ Examples:
 [9]: https://www.reddit.com/r/rust/comments/kdo29n/slog_vs_tracing_which_one_do_you_prefer
 [10]: https://en.wikipedia.org/wiki/Tracing_(software)
 [11]: https://www.aspecto.io/blog/distributed-tracing-with-opentelemetry-rust
+[12]: https://www.thecodedmessage.com/posts/logging

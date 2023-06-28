@@ -1,8 +1,6 @@
 Step 1.7: `Sized` and `?Sized` types
 ====================================
 
-__Estimated time__: 1 day
-
 Most types in [Rust] have a particular size, in bytes, that is knowable at compile time. For example, an `i32` is 32 bits big, or 4 bytes. However, there are some types which are useful to express, but do not have a defined size (called "unsized" or "dynamically sized" types). One example is `[T]`: it represents a certain number of `T` in a sequence, but we don’t know how many there are, so the size is not known.
 
 All types with a constant size known at compile time in [Rust] implement [`Sized`] marker trait. And all type parameters (except `Self` in traits) have always an implicit bound of [`Sized`]. So, you should not bother about specifying [`Sized`] marker trait in code, usually.
@@ -47,9 +45,23 @@ impl CommandHandler<CreateUser> for User {
 
 ## Task
 
+__Estimated time__: 1 day
+
+
+
+
 Given the [`User` and `UserRepository` implementations from the previous task](../1_6_dispatch#task), write the actual code for `CommandHandler<CreateUser>` implementation described above.
 
-Provide tests for `CommandHandler<CreateUser>` implementation where `dyn UserRepository` is mocked with another hand-written type for testing purposes.
+Provide tests for `CommandHandler<CreateUser>` implementation where `dyn UserRepository` is mocked with another hand-written type for testing purposes (you will need to transform the `UserRepository` type into a trait).
+
+
+
+
+## Questions
+
+After completing everything above, you should be able to answer (and understand why) the following questions:
+- What is [`Sized`] trait about? When [Rust] implies it? And when not?
+- Why `?Sized` trait bound is important? When should we use it and why?
 
 
 
