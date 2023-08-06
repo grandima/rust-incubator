@@ -3,3 +3,10 @@ name = "step_3_6"
 version = "0.1.0"
 edition = "2021"
 publish = false
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_derive = { version = "1.0.182" }
+toml = { version = "0.7.6" }
+serde_json = "1.0"
+serde_yaml = "0.9"
+
